@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');   
-
-const Schema = mongoose.Schema;
-
-const clubSchema = new Schema({
+const passportLocalMongoose = require('passport-local-mongoose');
+const clubSchema = new mongoose.Schema({
     name:{
         type:String,
         require:true
@@ -16,10 +14,10 @@ const clubSchema = new Schema({
         require:true
     },
     posts:[{
-        type:Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:'Post'
     }],
-    username:{
+    email:{
         type:String,//username ->email
         require:true
     },
@@ -28,5 +26,6 @@ const clubSchema = new Schema({
         require:true
     }
 })
+clubSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('Club',clubSchema);
