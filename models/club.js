@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');   
-const passportLocalMongoose = require('passport-local-mongoose');
+const mongoose = require('mongoose')
+
 const clubSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -26,6 +26,5 @@ const clubSchema = new mongoose.Schema({
         require:true
     }
 })
-clubSchema.plugin(passportLocalMongoose);
 
-module.exports = mongoose.model('Club',clubSchema);
+module.exports = mongoose.model('Club',clubSchema)

@@ -1,0 +1,54 @@
+POST http://localhost:8000/register
+Content-Type : application/json
+
+{
+    "email": "a1@gmail.com",
+    "username":"a1",
+    "department":"cse",
+    "year":"2025",
+    "rollno":"a1roll",
+    "password":"a1"
+}
+###
+
+POST http://localhost:8000/login
+Content-Type : application/json
+
+{
+    "username":"a1",
+    "password":"a1"
+}
+###
+
+GET http://localhost:8000/logout
+###
+
+GET http://localhost:8000/in
+###
+
+GET http://localhost:8000/
+###
+
+POST http://localhost:8000/club/register
+Content-Type : application/json
+
+{
+    "email": "c1@gmail.com",
+    "name":"c1",
+    "description":"c1descp",
+    "genSec":"c1gs",
+    "password":"c1"
+}
+###
+
+POST http://localhost:8000/club/login
+Content-Type : application/json
+
+{
+    "email":"c1@gmail.com",
+    "password":"c1"
+}
+###
+
+GET http://localhost:8000/club/ins
+###

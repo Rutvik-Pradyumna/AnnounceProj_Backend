@@ -4,11 +4,9 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 const verifyCallback =  (username,password,done)=>{
-       
         User.findOne({email:username})
         .then((user)=>{
             if(!user){return done(null,false)}
-            
              bcrypt.compare(password,user.password)
              .then((isValid) => {
                 if (isValid) {
@@ -43,4 +41,3 @@ passport.deserializeUser((clubId,done)=>{
     })
     .catch(err=>done(err))
 })
-

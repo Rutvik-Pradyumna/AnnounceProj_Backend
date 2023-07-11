@@ -1,31 +1,21 @@
+const bcrypt = require('bcrypt')
+const Club = require('../models/club')
 
-const bcrypt = require('bcrypt');
-const Club = require('../models/club');
-
-
-exports.startRoute = (req,res) => {
-    console.log("start")
-    res.send('start')
-}
-
-exports.clubRegister =async (req,res)=>{
-    const password = await bcrypt.hashSync(req.body.password,12);
-
+exports.clubRegister =async (req,res,next)=>{
     try{
-
-    const newClub = new Club({
-        email: req.body.email,
-        name:req.body.name,
-        description:req.body.department,
-        genSec:req.body.year,
-        password:password,
-     })
-    newClub.save();
-
+        const password = await bcrypt.hash(req.body.password,12)
+        const newClub = new Club({
+            email: req.body.email,
+            name:req.body.name,
+            description:req.body.description,
+            genSec:req.body.genSec,
+            password:password,
+        })
+        newClub.save()
     }
     catch(e){
-        console.log(e.message);
+        console.log(e.message)
     }
 
-    res.send('Registered')
+    next()
 }

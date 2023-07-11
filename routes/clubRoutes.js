@@ -1,15 +1,23 @@
 const express=require('express')
 const router=express.Router();
-const passport = require('passport');
 const {clubRegister}=require('../controllers/club.js')
-require('../middleware/clubAuth.js');
+const {clubAuthenticate}=require('../middleware/auth.js')
+require('../strategies/clubStrategy.js')
 
-router.post('/login', passport.authenticate('clubStrategy', { failureRedirect: '/register', failureMessage: true }), async (req, res) => {
-    res.send('logged in');
-});
+router.route('/login')
+.post(clubAuthenticate,(req,res) => {
+    console.log(req.session)
+    res.send('club logged in')
+})
 
 router.route('/register')
-.post(clubRegister)
+.post(clubRegister, clubAuthenticate, (req,res) => res.send('club registered and authed'))
 
+router.get('/ins',(req,res) => {
+    console.log(req.session)
+    if(req.isAuthenticated()){
+        res.send('club inside')
+    } else res.send('club outside')
+})
 
 module.exports = router;

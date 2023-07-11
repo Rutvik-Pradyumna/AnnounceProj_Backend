@@ -1,16 +1,18 @@
 const express=require('express')
 const router=express.Router()
-const {userRegister}=require('../controllers/user.js')
-const passport = require('passport');
+const {userRegister, logoutUser}=require('../controllers/user.js')
+const {userAuthenticate}=require('../middleware/auth.js')
+require('../strategies/userStrategy.js')
 
-require('../middleware/userAuth.js');
+router.route('/login')
+.post(userAuthenticate,(req,res) => {
+    res.send('user logged in')
+})
 
-router.post('/login', passport.authenticate('userStrategy', { failureRedirect: '/register', failureMessage: true }), async (req, res) => {
-    res.send('logged in');
-});
+router.route('/logout')
+.get(logoutUser)
 
 router.route('/register')
-.post(userRegister)
-
+.post(userRegister, userAuthenticate, (req,res) => res.send('user registered and authed'))
 
 module.exports = router;
