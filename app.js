@@ -1,38 +1,22 @@
 const express=require('express')
 require('dotenv').config({path : './envFolder/.env'})
 const mongoose = require('mongoose')
-const session = require('express-session');
+const cors = require('cors')
+
+
 const app=express()
 const port=8000
-var cors = require('cors');
-app.use(cors());
-const passport = require('passport');
 
-
-//Auth
-const sessionConfig = {
-    secret:'nikcheppanraep',
-    resave:false,
-    saveUninitialized:true,
-    cookie:{
-        httpOnly:true,
-        expires:Date.now()+1000*60*60*24*7,
-        maxAge : 1000*60*60*24*7
-    }
-}
-app.use(session(sessionConfig))
-app.use(passport.session());
-app.use(passport.initialize());
 
 // middleware
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended : true }))
 
 // routes
 app.use('/', require('./routes/tempRoute'))
-app.use('/', require('./routes/userRoutes'))
-app.use('/club', require('./routes/clubRoutes'))
-
+app.use('/user',require('./routes/userRoutes'))
+app.use(require('./middleware/errorHandler').errHandler)
 
 const startApp = async () => {
     try{
@@ -45,13 +29,3 @@ const startApp = async () => {
 }
 
 startApp()
-
-app.use((err, req, res, next) => {
-    if (err) {
-      res.status(401).json({ error: 'Authentication failed' });
-    }
-});
-
-
-
-
