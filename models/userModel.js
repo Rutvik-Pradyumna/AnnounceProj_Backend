@@ -43,7 +43,7 @@ userSchema.methods.updateTokens = async function(flag,newToken){
         if(oldTokens.length){
             oldTokens = oldTokens.filter(eachToken => {
                 let timeDiff = (Date.now() - parseInt(eachToken.signedAt))/1000
-                if(timeDiff < 20) return eachToken
+                if(timeDiff < 86400) return eachToken
             })
         }
         updatedTokens = [...oldTokens,{jwtToken : newToken,"signedAt" : Date.now().toString()}]

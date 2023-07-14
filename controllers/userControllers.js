@@ -16,13 +16,13 @@ exports.registerUser = async (req,res,next) => {
         })
 
         let existingUser = await User.findOne({"username" : newUser.username})
-        if(existingUser) res.send('Username Already exists')
+        if(existingUser) return res.send('Username Already exists')
         else{
             existingUser = await User.findOne({"email" : newUser.email})
-            if(existingUser) res.send('Email already Registered')
+            if(existingUser) return res.send('Email already Registered')
             else{
                 newUser.save()
-                res.send('User Registered')
+                return res.send('User Registered')
             }
         }
     } catch(err) {
@@ -34,7 +34,7 @@ exports.loginUser = async (req,res,next) => {
     let { email, password } = req.body
     let user = await User.findOne({"email" : email})
     if(!user){
-        res.status(404).send('User not found')
+        return res.status(404).send('User not found')
     }
     else{
         bcrypt.compare(password,user.password)
