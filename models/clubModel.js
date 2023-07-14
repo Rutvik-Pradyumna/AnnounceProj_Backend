@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');   
-const passportLocalMongoose = require('passport-local-mongoose');
+
 const clubSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -18,14 +18,44 @@ const clubSchema = new mongoose.Schema({
         ref:'Post'
     }],
     email:{
-        type:String,//username ->email
+        type:String,//username -> email
         require:true
     },
     password:{
         type:String,
         require:true
-    }
+    },
+    tokens:[{
+        type:Object
+    }]
 })
-clubSchema.plugin(passportLocalMongoose);
+
+clubSchema.methods.updateTokens = async function(flag,newToken){
+    // flag : 1 -> sign in , 0 -> sign out 
+    let oldTokens = this.tokens || []
+    let updatedTokens = []
+    // not adding newToken if it is not sent (for auth.js)
+    if( flag ){
+        if(oldTokens.length){
+            oldTokens = oldTokens.filter(eachToken => {
+                let timeDiff = (Date.now() - parseInt(eachToken.signedAt))/1000
+                if(timeDiff < 86400) return eachToken
+            })
+        }
+        updatedTokens = [...oldTokens,{jwtToken : newToken,"signedAt" : Date.now().toString()}]
+    }
+    else{
+        if(oldTokens.length){
+            oldTokens = oldTokens.filter(eachToken => {
+                let timeDiff = (Date.now() - parseInt(eachToken.signedAt))/1000
+                if(timeDiff < 86400 && eachToken.jwtToken !== newToken) return eachToken
+            })
+        }
+        updatedTokens = [...oldTokens]
+    }
+
+    this.tokens = updatedTokens
+    await this.save()
+}
 
 module.exports = mongoose.model('Club',clubSchema);
