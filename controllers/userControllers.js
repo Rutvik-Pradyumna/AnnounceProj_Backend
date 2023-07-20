@@ -22,7 +22,8 @@ exports.registerUser = async (req,res,next) => {
             if(existingUser) return res.send('Email already Registered')
             else{
                 newUser.save()
-                return res.send('User Registered')
+                req.user = newUser
+                return next()
             }
         }
     } catch(err) {
@@ -37,6 +38,7 @@ exports.loginUser = async (req,res,next) => {
         return res.status(404).send('User not found')
     }
     else{
+        if(!user.isVerified) return res.send('Verify your Email to continue')
         bcrypt.compare(password,user.password)
         .then( async (isPswdMatched) => {
             if (isPswdMatched) {
