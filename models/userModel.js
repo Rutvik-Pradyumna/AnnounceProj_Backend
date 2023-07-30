@@ -35,7 +35,11 @@ const userSchema =new mongoose.Schema({
     },
     tokens:[{
         type:Object
-    }]
+    }],
+    resetId:{
+        type:String,
+        default:""
+    }
 })
 
 userSchema.methods.updateTokens = async function(flag,newToken){
