@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const uuid = require('uuid')
 
 exports.registerUser = async (req,res,next) => {
     try{
@@ -61,4 +62,38 @@ exports.userLogout = async (req,res) => {
     let user = req.user
     await user.updateTokens(0,req.curJwt)
     res.send('User Logged Out')
+}
+
+exports.userForgotPass = async (req,res,next) => {
+    try {
+        let { email } = req.body
+        let user = await User.findOne({"email" : email})
+        if(!user) return res.send('Email does not exist')
+
+        // inserting resetId
+        let resetId = uuid.v4()
+        await User.findOneAndUpdate({"email":email},{"resetId":resetId})
+        req.resetId = resetId
+        req.userId = user._id
+        req.email = email
+        next()
+    } catch (err) {
+        next(err)
+    }
+}
+
+exports.userResetPass = async (req,res,next) => {
+    try {
+        let { userId,resetId } = req.query
+        let user = await User.findById(userId)
+        if(!user){
+            return res.status(404).send('User not found')
+        }
+        if(user.resetId!=resetId) return res.send('Invalid resetId')
+        let hashedPassword = await bcrypt.hash(req.body.password,parseInt(process.env.SALT))
+        await User.findByIdAndUpdate({_id:userId},{$set:{password:hashedPassword, resetId:""}},{new:true})
+        res.json({userId,resetId})
+    } catch (err) {
+        next(err)
+    }
 }

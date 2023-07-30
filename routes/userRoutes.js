@@ -1,8 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { registerUser,loginUser,userLogout } = require('../controllers/userControllers')
+const { registerUser,loginUser,userLogout,userForgotPass,userResetPass } = require('../controllers/userControllers')
 const { userAuthCheck } = require('../middleware/auth')
 const { sendVerMail,verifyUser } = require('../middleware/emailVerify')
+const { userResetMail } = require('../middleware/passwordReset')
 
 router.route('/register')
 .post(registerUser,sendVerMail)
@@ -15,6 +16,12 @@ router.route('/protected')
 
 router.route('/verify')
 .get(verifyUser)
+
+router.route('/forgot-password')
+.get(userForgotPass,userResetMail)
+
+router.route('/reset-password')
+.put(userResetPass)
 
 router.route('/logout')
 .get(userAuthCheck,userLogout)
