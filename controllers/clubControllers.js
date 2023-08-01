@@ -49,7 +49,8 @@ exports.loginClub = async (req,res,next) => {
                 let jwtToken = jwt.sign({"email" : club.email},process.env.SECRET,{"expiresIn" : "1d"})
                 // updating old tokens
                 club.updateTokens(1,jwtToken)
-
+                res.cookie('jwtToken',jwtToken,{httpOnly:true, expires:new Date(Date.now() + 24*60*60*1000)})
+                res.cookie('userType',"nonAdmin",{httpOnly:true, expires:new Date(Date.now() + 24*60*60*1000)})
                 return res.json({jwtToken, "userType" : "club"})
             } else {
                 return res.status(400).send('Invalid password')
@@ -62,5 +63,7 @@ exports.loginClub = async (req,res,next) => {
 exports.clubLogout = async (req,res) => {
     let club = req.club
     await club.updateTokens(0,req.curJwt)
+    res.clearCookie('jwtToken')
+    res.clearCookie('userType')
     res.send('Club Logged Out')
 }
