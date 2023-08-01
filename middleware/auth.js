@@ -3,8 +3,8 @@ const User = require('../models/userModel')
 const Club = require('../models/clubModel')
 
 exports.userAuthCheck = (req,res,next) => {
-    if(req.headers && req.headers.authorization){
-        let jwtToken = req.headers.authorization.split(' ')[1]
+        let jwtToken = req.cookies.jwtToken
+        if(!jwtToken) return res.status(401).send('Unauthorized Access')
         jwt.verify(jwtToken,process.env.secret,async (err,payload) => {
 
             if(err) return res.send('Invalid Access Token Log In again')
@@ -25,14 +25,11 @@ exports.userAuthCheck = (req,res,next) => {
             }
 
         })
-    } else {
-        return res.status(401).send('Unauthorized Access')
-    }
 }
 
 exports.clubAuthCheck =  (req,res,next) => {
-    if(req.headers && req.headers.authorization){
-        let jwtToken = req.headers.authorization.split(' ')[1]
+    let jwtToken = req.cookies.jwtToken
+    if(!jwtToken) return res.status(401).send('Unauthorized Access')
         jwt.verify(jwtToken,process.env.secret,async (err,payload) => {
 
             if(err) return res.send('Invalid Access Token Log In again')
@@ -53,7 +50,4 @@ exports.clubAuthCheck =  (req,res,next) => {
             }
 
         })
-    } else {
-        return res.status(401).send('Unauthorized Access')
-    }
 }

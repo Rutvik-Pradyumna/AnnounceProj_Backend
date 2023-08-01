@@ -48,8 +48,9 @@ exports.loginUser = async (req,res,next) => {
                 let jwtToken = jwt.sign({"email" : user.email},process.env.SECRET,{"expiresIn" : "1d"})
                 // updating old tokens
                 user.updateTokens(1,jwtToken)
-
-                res.json({jwtToken, "userType" : "nonAdmin"})
+                res.cookie('jwtToken',jwtToken,{httpOnly:true, expires:new Date(Date.now() + 24*60*60*1000)})
+                res.cookie('userType',"nonAdmin",{httpOnly:true, expires:new Date(Date.now() + 24*60*60*1000)})
+                res.json({jwtToken,"userType" : "nonAdmin"})
             } else {
                 res.status(400).send('Invalid password')
             }
@@ -61,6 +62,8 @@ exports.loginUser = async (req,res,next) => {
 exports.userLogout = async (req,res) => {
     let user = req.user
     await user.updateTokens(0,req.curJwt)
+    res.clearCookie('jwtToken')
+    res.clearCookie('userType')
     res.send('User Logged Out')
 }
 
