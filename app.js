@@ -16,9 +16,9 @@ app.use(express.urlencoded({ extended : true }))
 app.use(cookieParser())
 
 // routes
-app.use('/', require('./routes/tempRoute'))
-app.use('/user',require('./routes/userRoutes'))
-app.use('/club',require('./routes/clubRoutes'))
+app.use('/api/', require('./routes/tempRoute'))
+app.use('/api/user',require('./routes/userRoutes'))
+app.use('/api/club',require('./routes/clubRoutes'))
 app.use(require('./middleware/errorHandler').errHandler)
 
 const startApp = async () => {

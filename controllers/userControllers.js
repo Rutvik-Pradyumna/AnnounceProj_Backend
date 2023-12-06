@@ -2,6 +2,8 @@ const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const uuid = require('uuid')
+const Club = require('../models/clubModel')
+const { sendVerMail } = require('../middleware/emailVerify')
 
 exports.registerUser = async (req,res,next) => {
     try{
@@ -39,7 +41,11 @@ exports.loginUser = async (req,res,next) => {
         return res.status(404).send('User not found')
     }
     else{
-        if(!user.isVerified) return res.send('Verify your Email to continue')
+        if(!user.isVerified){
+            // req.user = user
+            // sendVerMail(req,res,next)
+            return res.send('Verify your Email to continue')
+        }
         bcrypt.compare(password,user.password)
         .then( async (isPswdMatched) => {
             if (isPswdMatched) {
@@ -99,4 +105,9 @@ exports.userResetPass = async (req,res,next) => {
     } catch (err) {
         next(err)
     }
+}
+
+exports.getAllClubs = async (req,res,next) => {
+    let allClubs = await Club.find({})
+    res.send(allClubs)
 }
