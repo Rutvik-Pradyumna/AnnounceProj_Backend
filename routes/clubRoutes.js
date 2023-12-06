@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { registerClub,loginClub,clubLogout } = require('../controllers/clubControllers')
+const { registerClub,
+        loginClub,
+        clubLogout,
+        addEvent
+    } = require('../controllers/clubControllers')
 const { clubAuthCheck } = require('../middleware/auth')
 
 router.route('/register')
@@ -14,5 +18,8 @@ router.route('/protected')
 
 router.route('/logout')
 .get(clubAuthCheck,clubLogout)
+
+router.route('/addEvent')
+.post(clubAuthCheck,addEvent)
 
 module.exports = router

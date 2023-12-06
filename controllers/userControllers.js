@@ -108,6 +108,22 @@ exports.userResetPass = async (req,res,next) => {
 }
 
 exports.getAllClubs = async (req,res,next) => {
-    let allClubs = await Club.find({})
-    res.send(allClubs)
+    try {
+        let allClubs = await Club.find().populate("posts");
+        console.log(allClubs)
+        res.send(allClubs)
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.getProfile = async (req,res,next) => {
+    let profile = {
+        "email" : req.user.email,
+        "username" : req.user.email,
+        "department" : req.user.department,
+        "year": req.user.year,
+        "rollno": req.user.rollno
+    }
+    res.send(profile)
 }

@@ -5,7 +5,8 @@ const { registerUser,
         userLogout,
         userForgotPass,
         userResetPass,
-        getAllClubs 
+        getAllClubs,
+        getProfile
     } = require('../controllers/userControllers')
 const { userAuthCheck } = require('../middleware/auth')
 const { sendVerMail,verifyUser } = require('../middleware/emailVerify')
@@ -34,5 +35,8 @@ router.route('/logout')
 
 router.route('/getAllClubs')
 .get(userAuthCheck,getAllClubs)
+
+router.route('/getProfile')
+.get(userAuthCheck,getProfile)
 
 module.exports = router
