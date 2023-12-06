@@ -126,3 +126,10 @@ exports.getProfile = async (req,res,next) => {
     }
     res.send(profile)
 }
+
+exports.getEachClub = async (req,res,next) => {
+    let { clubId } = req.query
+    let myClub = await Club.findById(clubId).populate("posts")
+    if(!myClub) return res.send('Invalid clubId')
+    else res.send(myClub)
+}
