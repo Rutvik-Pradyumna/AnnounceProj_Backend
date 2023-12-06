@@ -86,3 +86,12 @@ exports.addEvent = async (req,res) => {
     )
     res.send("Event Added Succesfully")
 }
+
+exports.getMyClub = async (req,res,next) => {
+    try {
+        let myClub = await Club.findById(req.club._id).populate("posts")
+        res.send(myClub)
+    } catch (error) {
+        next(error)
+    }
+}

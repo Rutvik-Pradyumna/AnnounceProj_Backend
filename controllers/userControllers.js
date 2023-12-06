@@ -109,8 +109,7 @@ exports.userResetPass = async (req,res,next) => {
 
 exports.getAllClubs = async (req,res,next) => {
     try {
-        let allClubs = await Club.find().populate("posts");
-        console.log(allClubs)
+        let allClubs = await Club.find().populate("posts")
         res.send(allClubs)
     } catch (error) {
         next(error)
@@ -126,4 +125,11 @@ exports.getProfile = async (req,res,next) => {
         "rollno": req.user.rollno
     }
     res.send(profile)
+}
+
+exports.getEachClub = async (req,res,next) => {
+    let { clubId } = req.query
+    let myClub = await Club.findById(clubId).populate("posts")
+    if(!myClub) return res.send('Invalid clubId')
+    else res.send(myClub)
 }

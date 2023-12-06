@@ -6,11 +6,13 @@ const { registerUser,
         userForgotPass,
         userResetPass,
         getAllClubs,
-        getProfile
+        getProfile,
+        getEachClub
     } = require('../controllers/userControllers')
 const { userAuthCheck } = require('../middleware/auth')
 const { sendVerMail,verifyUser } = require('../middleware/emailVerify')
 const { userResetMail } = require('../middleware/passwordReset')
+const { getEventListeners } = require('nodemailer/lib/xoauth2')
 
 router.route('/register')
 .post(registerUser,sendVerMail)
@@ -38,5 +40,8 @@ router.route('/getAllClubs')
 
 router.route('/getProfile')
 .get(userAuthCheck,getProfile)
+
+router.route('/getEachClub')
+.get(userAuthCheck,getEachClub)
 
 module.exports = router
