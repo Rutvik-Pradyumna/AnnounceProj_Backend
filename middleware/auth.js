@@ -11,6 +11,9 @@ exports.userAuthCheck = (req, res, next) => {
         else {
             // checking auth of user
             let user = await User.findOne({ "email": payload.email })
+            if (!user) {
+                return res.status(401).send('User not found for the given email or token error');
+            }
             // checking if current jwtToken is in db
             let oldTokens = user.tokens || []
             let foundToken = 0
@@ -35,7 +38,10 @@ exports.clubAuthCheck = (req, res, next) => {
         if (err) return res.send('Invalid Access Token Log In again')
         else {
             // checking auth of club
-            let club = await Club.findOne({ "email": payload.email })
+            let club = await Club.findOne({ "email": payload.email });
+            if (!club) {
+                return res.status(401).send('Club not found for the given email or token error');
+            }
             // checking if current jwtToken is in db
             let oldTokens = club.tokens || []
             let foundToken = 0

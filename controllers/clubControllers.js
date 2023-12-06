@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt')
 const Club = require('../models/clubModel')
+const Post = require('../models/postModel')
 const jwt = require('jsonwebtoken')
+const { mongoose } = require('mongoose')
 
 exports.registerClub = async (req,res,next) => {
     try{
@@ -67,4 +69,20 @@ exports.clubLogout = async (req,res) => {
     res.clearCookie('jwtToken')
     res.clearCookie('userType')
     res.send('Club Logged Out')
+}
+
+exports.addEvent = async (req,res) => {
+    let post = await Post.create({
+        title : req.body.title,
+        description : req.body.description,
+        image : req.body.image,
+        lastDateToApply : req.body.lastDateToApply,
+        eventDate : req.body.eventDate
+    })
+    await Club.updateOne(
+        { email : req.club.email },
+        { $push : { posts : new mongoose.Types.ObjectId(post._id) } },
+        { upsert : false, new : true }
+    )
+    res.send("Event Added Succesfully")
 }

@@ -10,11 +10,15 @@ const postSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    image:[{
+    image:{
         type:String,
         required:true
-    }],
-    lastDate:{
+    },
+    lastDateToApply:{
+        type:Date,
+        required:true
+    },
+    eventDate:{
         type:Date,
         required:true
     },
