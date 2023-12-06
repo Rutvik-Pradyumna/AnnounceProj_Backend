@@ -15,13 +15,13 @@ exports.sendVerMail = (req,res,next) => {
         from : process.env.MAIL_ID,
         to : email,
         subject : 'Verify Your Mail for NitWBuZZ',
-        html : `<a href="http://localhost:8000/user/verify?userId=${_id}">Click here to verify</a>`
+        html : `<a href="http://localhost:8000/api/user/verify?userId=${_id}">Click here to verify</a>`
     }
     transporter.sendMail(mailOptions)
     .then( info => console.log(info.response))
     .catch( err => next(err) )
 
-    res.send('Registration Successfull, Check Your Email for Verification Process.')
+    res.send('Check Your Email for Verification Process.')
 }
 
 exports.verifyUser = async (req,res,next) => {

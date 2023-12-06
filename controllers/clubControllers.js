@@ -16,7 +16,8 @@ exports.registerClub = async (req,res,next) => {
             "description" : req.body.description,
             "genSec" : req.body.genSec,
             "email" : req.body.email,
-            "password" : hashedPassword
+            "password" : hashedPassword,
+            "image" : req.body.image
         })
 
         let existingClub = await Club.findOne({"name" : newClub.name})

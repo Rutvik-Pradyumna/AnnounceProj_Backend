@@ -1,6 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const { registerUser,loginUser,userLogout,userForgotPass,userResetPass } = require('../controllers/userControllers')
+const { registerUser,
+        loginUser,
+        userLogout,
+        userForgotPass,
+        userResetPass,
+        getAllClubs 
+    } = require('../controllers/userControllers')
 const { userAuthCheck } = require('../middleware/auth')
 const { sendVerMail,verifyUser } = require('../middleware/emailVerify')
 const { userResetMail } = require('../middleware/passwordReset')
@@ -25,5 +31,8 @@ router.route('/reset-password')
 
 router.route('/logout')
 .get(userAuthCheck,userLogout)
+
+router.route('/getAllClubs')
+.get(userAuthCheck,getAllClubs)
 
 module.exports = router

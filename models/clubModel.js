@@ -9,6 +9,10 @@ const clubSchema = new mongoose.Schema({
         type:String,
         require:true
     },
+    image:{
+        type:String,
+        required:true
+    },
     genSec:{
         type:String,
         require:true
@@ -18,7 +22,7 @@ const clubSchema = new mongoose.Schema({
         ref:'Post'
     }],
     email:{
-        type:String,//username -> email
+        type:String,
         require:true
     },
     password:{
