@@ -8,7 +8,8 @@ const { registerUser,
         getAllClubs,
         getProfile,
         getEachClub,
-        registerEvent
+        registerEvent,
+        unregisterEvent
     } = require('../controllers/userControllers')
 const { userAuthCheck } = require('../middleware/auth')
 const { sendVerMail,verifyUser } = require('../middleware/emailVerify')
@@ -47,5 +48,8 @@ router.route('/getEachClub')
 
 router.route('/registerEvent')
 .post(userAuthCheck,registerEvent)
+
+router.route('/unregisterEvent')
+.put(userAuthCheck,unregisterEvent)
 
 module.exports = router

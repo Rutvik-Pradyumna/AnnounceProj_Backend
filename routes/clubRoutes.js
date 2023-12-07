@@ -4,7 +4,8 @@ const { registerClub,
         loginClub,
         clubLogout,
         addEvent,
-        getMyClub
+        getMyClub,
+        deleteEvent
     } = require('../controllers/clubControllers')
 const { clubAuthCheck } = require('../middleware/auth')
 
@@ -25,5 +26,8 @@ router.route('/addEvent')
 
 router.route('/getMyClub')
 .get(clubAuthCheck,getMyClub)
+
+router.route('/deleteEvent')
+.delete(clubAuthCheck,deleteEvent)
 
 module.exports = router

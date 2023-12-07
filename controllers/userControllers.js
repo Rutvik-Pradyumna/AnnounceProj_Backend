@@ -147,3 +147,31 @@ exports.registerEvent = async (req,res,next) => {
     }
     res.send("registered successfully")
 }
+
+exports.unregisterEvent = async (req,res,next) => {
+    let postId = req.query.postId
+
+    let oldPosts = req.user.posts
+    let newPosts = []
+    oldPosts = oldPosts.filter(eachPost => {
+        if(eachPost.toString() !== postId.toString()) return eachPost
+    })
+    newPosts = [...oldPosts]
+
+    let curPost = await Post.findById(postId)
+    let oldUsers = curPost.users
+    let newUsers = []
+    oldUsers = oldUsers.filter(eachUser => {
+        if(eachUser.toString() !== req.user._id.toString()) return eachUser
+    })
+    newUsers = [...oldUsers]
+
+    try{
+        await Post.findByIdAndUpdate(postId,{users : newUsers})
+        await User.findByIdAndUpdate(req.user._id,{posts : newPosts})
+    } catch(err) {
+        next(err)
+    }
+
+    res.send('unregistered succesfully')
+}
