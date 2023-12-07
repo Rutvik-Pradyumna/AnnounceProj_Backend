@@ -95,3 +95,20 @@ exports.getMyClub = async (req,res,next) => {
         next(error)
     }
 }
+
+exports.deleteEvent = async (req,res,next) => {
+    let postId = req.query.postId
+    let oldPosts = req.club.posts
+    let newPosts = []
+    oldPosts = oldPosts.filter(eachPost => {
+        if(eachPost.toString() !== postId.toString()) return eachPost
+    })
+    newPosts = [...oldPosts]
+    try{
+        await Club.findByIdAndUpdate(req.club._id,{posts : newPosts})
+        await Post.findByIdAndDelete(postId)
+    } catch(err) {
+        next(err)
+    }
+    res.send("deleted post successfully")
+}
