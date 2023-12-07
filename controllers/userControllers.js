@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const uuid = require('uuid')
 const Club = require('../models/clubModel')
 const { sendVerMail } = require('../middleware/emailVerify')
+const Post = require('../models/postModel')
+const { mongoose } = require('mongoose')
 
 exports.registerUser = async (req,res,next) => {
     try{
@@ -117,13 +119,7 @@ exports.getAllClubs = async (req,res,next) => {
 }
 
 exports.getProfile = async (req,res,next) => {
-    let profile = {
-        "email" : req.user.email,
-        "username" : req.user.email,
-        "department" : req.user.department,
-        "year": req.user.year,
-        "rollno": req.user.rollno
-    }
+    let profile = await User.findById(req.user._id).populate("posts")
     res.send(profile)
 }
 
@@ -132,4 +128,22 @@ exports.getEachClub = async (req,res,next) => {
     let myClub = await Club.findById(clubId).populate("posts")
     if(!myClub) return res.send('Invalid clubId')
     else res.send(myClub)
+}
+
+exports.registerEvent = async (req,res,next) => {
+    try{
+        await User.updateOne(
+            { email : req.user.email },
+            { $push : { posts : new mongoose.Types.ObjectId(req.query.postId) } },
+            { upsert : false, new : true }
+        )
+        await Post.updateOne(
+            { _id : req.query.postId },
+            { $push : { users : new mongoose.Types.ObjectId(req.user._id) } },
+            { upsert : false, new : true }
+        )
+    } catch (err) {
+        next(err)
+    }
+    res.send("registered successfully")
 }
